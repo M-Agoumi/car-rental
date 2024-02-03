@@ -1,0 +1,14 @@
+{
+	"info": {
+		"_postman_id": "0f151d43-e1cf-49f5-9f0c-70b5617fb15f",
+		"name": "App",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "16623299"
+	},
+	"item": [
+		{
+			"name": "cars",
+			"item": []
+		}
+	]
+}
