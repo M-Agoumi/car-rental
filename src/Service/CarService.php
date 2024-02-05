@@ -4,7 +4,6 @@ namespace App\Service;
 
 use App\Entity\Car;
 use App\Repository\CarRepository;
-use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -12,10 +11,9 @@ readonly class CarService
 {
     public function __construct(
         private EntityManagerInterface $manager,
-        private ValidatorInterface     $validator,
-        private CarRepository          $carRepository
-    )
-    {
+        private ValidatorInterface $validator,
+        private CarRepository $carRepository
+    ) {
     }
 
     public function getCars(int $page, int $elementsByPage): array
@@ -30,7 +28,7 @@ readonly class CarService
             return $car;
         }
 
-        return NULL;
+        return null;
     }
 
     public function createCar(string $name, ?int $seats, string $description, bool $isPublished): array
@@ -41,7 +39,7 @@ readonly class CarService
         $car->setSeats($seats);
         $car->setDescription($description);
         $car->setIsPublished($isPublished);
-        $car->setCreatedAt(new DateTimeImmutable('now'));
+        $car->setCreatedAt(new \DateTimeImmutable('now'));
 
         return $this->validate($car);
     }
@@ -56,10 +54,6 @@ readonly class CarService
         return $this->validate($car);
     }
 
-    /**
-     * @param Car $car
-     * @return array
-     */
     private function validate(Car $car): array
     {
         $errors = $this->validator->validate($car);

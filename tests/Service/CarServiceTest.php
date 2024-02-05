@@ -29,7 +29,7 @@ class CarServiceTest extends KernelTestCase
 
     public function testGetCars(): void
     {
-        $cars = $this->carService->getCars(1,10);
+        $cars = $this->carService->getCars(1, 10);
 
         // Example assertion
         $this->assertIsArray($cars);
@@ -38,8 +38,9 @@ class CarServiceTest extends KernelTestCase
     public function testGetCar(): void
     {
         $car = $this->carRepository->findOneBy(['isPublished' => true]);
-        if (!$car)
+        if (!$car) {
             $this->markTestSkipped('No car found in the database.');
+        }
         $carFromService = $this->carService->getCar($car->getId());
 
         $this->assertEquals($car, $carFromService);
@@ -55,7 +56,7 @@ class CarServiceTest extends KernelTestCase
     {
         $car = $this->carRepository->findOneBy([]);
 
-        $errors = $this->carService->updateCar($car, 'Test updated', 4,'A nice test car', false);
+        $errors = $this->carService->updateCar($car, 'Test updated', 4, 'A nice test car', false);
 
         // Example assertion
         $this->assertEmpty($errors);

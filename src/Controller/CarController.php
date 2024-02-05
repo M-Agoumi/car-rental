@@ -29,8 +29,10 @@ class CarController extends AbstractController
     public function show(int $id, CarService $carService): Response
     {
         $car = $carService->getCar($id);
-        if (!$car)
+        if (!$car) {
             return $this->json(['error' => 'Car not found'], 404);
+        }
+
         return $this->json($car, 200, [], ['groups' => ['show_car']]);
     }
 
@@ -41,12 +43,13 @@ class CarController extends AbstractController
         $data = json_decode($request->getContent(), true);
         $errors = $carService->createCar(
             $data['name'] ?? '',
-            (int)($data['seats'] ?? null),
+            (int) ($data['seats'] ?? null),
             $data['description'] ?? '',
-            (bool)($data['isPublished'] ?? false)
+            (bool) ($data['isPublished'] ?? false)
         );
-        if (count($errors) > 0)
+        if (count($errors) > 0) {
             return $this->json(['errors' => $errors], 400);
+        }
 
         return $this->json(['message' => 'Car created successfully'], 201);
     }
@@ -56,18 +59,20 @@ class CarController extends AbstractController
     public function update(int $id, Request $request, CarService $carService, CarRepository $carRepository): Response
     {
         $car = $carRepository->find($id);
-        if (!$car)
+        if (!$car) {
             return $this->json(['error' => 'Car not found'], 404);
+        }
 
         $data = json_decode($request->getContent(), true);
         $errors = $carService->updateCar($car,
             $data['name'] ?? null,
-            (int)($data['seats'] ?? null),
+            (int) ($data['seats'] ?? null),
             $data['description'] ?? null,
-            (bool)($data['isPublished'] ?? false)
+            (bool) ($data['isPublished'] ?? false)
         );
-        if (count($errors) > 0)
+        if (count($errors) > 0) {
             return $this->json(['errors' => $errors], 400);
+        }
 
         return $this->json(['message' => 'Car updated successfully']);
     }
@@ -77,9 +82,11 @@ class CarController extends AbstractController
     public function delete(int $id, CarService $carService, CarRepository $carRepository): Response
     {
         $car = $carRepository->find($id);
-        if (!$car)
+        if (!$car) {
             return $this->json(['error' => 'Car not found'], 404);
+        }
         $carService->deleteCar($car);
+
         return $this->json(['message' => 'Car deleted successfully']);
     }
 }

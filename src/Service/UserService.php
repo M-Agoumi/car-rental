@@ -3,35 +3,32 @@
 namespace App\Service;
 
 use App\Entity\User;
-use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
-use stdClass;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 readonly class UserService
 {
     public function __construct(
-        private EntityManagerInterface      $manager,
-        private ValidatorInterface          $validator,
+        private EntityManagerInterface $manager,
+        private ValidatorInterface $validator,
         private UserPasswordHasherInterface $passwordHasher
-    )
-    {
+    ) {
     }
 
-    public function signUpUser(stdClass $userData): User|array
+    public function signUpUser(\stdClass $userData): User|array
     {
         $user = new User();
 
         $user->setUsername($userData->username ?? '');
         $user->setRawPassword($userData->password ?? '');
-        $user->setCreatedAt(new DateTimeImmutable('now'));
+        $user->setCreatedAt(new \DateTimeImmutable('now'));
 
         $errors = $this->validator->validate($user);
         if (count($errors)) {
             $errorData = [];
             foreach ($errors as $error) {
-                $path = $error->getPropertyPath() == 'rawPassword' ? 'password' : $error->getPropertyPath();
+                $path = 'rawPassword' == $error->getPropertyPath() ? 'password' : $error->getPropertyPath();
                 $errorData[] = [$path => $error->getMessage()];
             }
 

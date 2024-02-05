@@ -4,7 +4,6 @@ namespace App\Tests\FunctionalTest;
 
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase;
 
-
 class ReservationTest extends ApiTestCase
 {
     public function testListReservations(): void
@@ -14,7 +13,7 @@ class ReservationTest extends ApiTestCase
         $client->loginUser($user);
 
         $client->loginUser($user);
-        $client->request('GET', '/api/users/ ' . $user->getId() . '/reservations', ['json' => []]);
+        $client->request('GET', '/api/users/ '.$user->getId().'/reservations', ['json' => []]);
 
         $this->assertResponseIsSuccessful();
     }
@@ -26,7 +25,7 @@ class ReservationTest extends ApiTestCase
         $client->loginUser($user);
 
         $client->loginUser($user);
-        $client->request('GET', '/api/users/ ' . ($user->getId() + 1) . '/reservations', ['json' => []]);
+        $client->request('GET', '/api/users/ '.($user->getId() + 1).'/reservations', ['json' => []]);
 
         $this->assertResponseStatusCodeSame(401);
     }
@@ -40,7 +39,7 @@ class ReservationTest extends ApiTestCase
         $client->request('POST', '/api/reservations', ['json' => [
             'carId' => $car->getId(),
             'startDate' => date('Y-m-d'),
-            'endDate' => date('Y-m-d', strtotime('+1 day'))
+            'endDate' => date('Y-m-d', strtotime('+1 day')),
         ]]);
 
         $this->assertResponseIsSuccessful();
@@ -54,7 +53,7 @@ class ReservationTest extends ApiTestCase
         $client->request('POST', '/api/reservations', ['json' => [
             'carId' => '1000',
             'startDate' => date('Y-m-d'),
-            'endDate' => date('Y-m-d', strtotime('+1 day'))
+            'endDate' => date('Y-m-d', strtotime('+1 day')),
         ]]);
 
         $this->assertResponseStatusCodeSame(404);
@@ -66,8 +65,8 @@ class ReservationTest extends ApiTestCase
         $user = $client->getContainer()->get('App\Repository\UserRepository')->findOneBy(['username' => 'admin']);
         $reservation = $client->getContainer()->get('App\Repository\ReservationRepository')->findOneBy([], ['id' => 'DESC']);
         $client->loginUser($user);
-        $client->request('PUT', '/api/reservations/' . $reservation->getId(), ['json' => [
-            'endDate' => date('Y-m-d', strtotime('+2 day'))
+        $client->request('PUT', '/api/reservations/'.$reservation->getId(), ['json' => [
+            'endDate' => date('Y-m-d', strtotime('+2 day')),
         ]]);
 
         $this->assertResponseIsSuccessful();
@@ -82,8 +81,8 @@ class ReservationTest extends ApiTestCase
         if (!$reservation) {
             $this->markTestSkipped('No reservation found');
         }
-        $client->request('PUT', '/api/reservations/' . $reservation->getId(), ['json' => [
-            'endDate' => date('Y-m-d', strtotime('+10 day'))
+        $client->request('PUT', '/api/reservations/'.$reservation->getId(), ['json' => [
+            'endDate' => date('Y-m-d', strtotime('+10 day')),
         ]]);
 
         $this->assertResponseStatusCodeSame(401);
@@ -95,7 +94,7 @@ class ReservationTest extends ApiTestCase
         $user = $client->getContainer()->get('App\Repository\UserRepository')->findOneBy(['username' => 'admin']);
         $reservation = $client->getContainer()->get('App\Repository\ReservationRepository')->findOneBy([], ['id' => 'DESC']);
         $client->loginUser($user);
-        $client->request('DELETE', '/api/reservations/' . $reservation->getId());
+        $client->request('DELETE', '/api/reservations/'.$reservation->getId());
 
         $this->assertResponseIsSuccessful();
     }
@@ -109,7 +108,7 @@ class ReservationTest extends ApiTestCase
         if (!$reservation) {
             $this->markTestSkipped('No reservation found');
         }
-        $client->request('DELETE', '/api/reservations/' . $reservation->getId(), );
+        $client->request('DELETE', '/api/reservations/'.$reservation->getId());
 
         $this->assertResponseStatusCodeSame(401);
     }

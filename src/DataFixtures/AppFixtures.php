@@ -4,7 +4,6 @@ namespace App\DataFixtures;
 
 use App\Entity\Car;
 use App\Entity\User;
-use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -12,7 +11,6 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
-
     public function __construct(private readonly string $env, private readonly UserPasswordHasherInterface $passwordHasher)
     {
     }
@@ -20,7 +18,7 @@ class AppFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         // check if env is a test environment
-        if ($this->env !== 'test') {
+        if ('test' !== $this->env) {
             $this->printToConsole('This fixture is only for test environment', 'error');
         }
 
@@ -45,14 +43,14 @@ class AppFixtures extends Fixture
         $user = new User();
         $user->setUsername('testuser1');
         $user->setPassword($this->passwordHasher->hashPassword($user, 'admin'));
-        $user->setCreatedAt(new DateTimeImmutable('now'));
+        $user->setCreatedAt(new \DateTimeImmutable('now'));
         $manager->persist($user);
         // create admin user
         $admin = new User();
         $admin->setUsername('admin');
         $admin->setPassword($this->passwordHasher->hashPassword($admin, 'admin'));
         $admin->setRoles(['ROLE_ADMIN']);
-        $admin->setCreatedAt(new DateTimeImmutable('now'));
+        $admin->setCreatedAt(new \DateTimeImmutable('now'));
         $manager->persist($admin);
         $manager->flush();
     }
@@ -63,13 +61,13 @@ class AppFixtures extends Fixture
         $car1 = new Car();
         $car1->setName('Toyota Corolla');
         $car1->setSeats(5);
-        $car1->setCreatedAt(new DateTimeImmutable('now'));
+        $car1->setCreatedAt(new \DateTimeImmutable('now'));
         $car1->setIsPublished(true);
         $manager->persist($car1);
         $car2 = new Car();
         $car2->setName('Honda Civic');
         $car2->setSeats(4);
-        $car2->setCreatedAt(new DateTimeImmutable('now'));
+        $car2->setCreatedAt(new \DateTimeImmutable('now'));
         $car2->setIsPublished(false);
         $manager->persist($car2);
         $manager->flush();

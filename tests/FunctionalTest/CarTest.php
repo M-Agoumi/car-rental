@@ -16,7 +16,7 @@ class CarTest extends ApiTestCase
         $user = $client->getContainer()->get('App\Repository\UserRepository')->findOneBy(['username' => 'admin']);
         $client->loginUser($user);
         $car = $client->getContainer()->get('App\Repository\CarRepository')->findOneBy([], ['id' => 'ASC']);
-        $client->request('PUT', '/api/cars/' . $car->getId(), ['json' => [
+        $client->request('PUT', '/api/cars/'.$car->getId(), ['json' => [
             'name' => 'Seat Ibiza updated',
             'description' => 'A nice car',
             'seats' => 4,
@@ -25,7 +25,6 @@ class CarTest extends ApiTestCase
 
         $this->assertResponseIsSuccessful();
     }
-
 
     /**
      * @throws TransportExceptionInterface
@@ -36,7 +35,7 @@ class CarTest extends ApiTestCase
         $user = $client->getContainer()->get('App\Repository\UserRepository')->findOneBy(['username' => 'testuser1']);
         $client->loginUser($user);
         $car = $client->getContainer()->get('App\Repository\CarRepository')->findOneBy([], ['id' => 'ASC']);
-        $client->request('PUT', '/api/cars/' . $car->getId(), ['json' => [
+        $client->request('PUT', '/api/cars/'.$car->getId(), ['json' => [
             'name' => 'Toyota Corolla updated',
             'description' => 'A nice car',
             'seats' => 4,
@@ -53,7 +52,7 @@ class CarTest extends ApiTestCase
         // get last inserted car
         $car = $client->getContainer()->get('App\Repository\CarRepository')->findOneBy([], ['id' => 'DESC']);
         $client->loginUser($user);
-        $client->request('DELETE', '/api/cars/' . $car->getId());
+        $client->request('DELETE', '/api/cars/'.$car->getId());
 
         $this->assertResponseIsSuccessful();
     }
@@ -65,7 +64,7 @@ class CarTest extends ApiTestCase
         // get last inserted car
         $car = $client->getContainer()->get('App\Repository\CarRepository')->findOneBy([], ['id' => 'DESC']);
         $client->loginUser($user);
-        $client->request('DELETE', '/api/cars/' . $car->getId());
+        $client->request('DELETE', '/api/cars/'.$car->getId());
 
         $this->assertResponseStatusCodeSame(403);
     }

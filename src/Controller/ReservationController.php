@@ -17,11 +17,10 @@ class ReservationController extends AbstractController
 {
     #[Route('/reservations', name: 'app_create_reservation', methods: ['POST'])]
     public function createReservation(
-        Request            $request,
+        Request $request,
         ReservationService $reservationService,
-        CarService         $carService
-    ): Response
-    {
+        CarService $carService
+    ): Response {
         // Get the data from the request
         $data = json_decode($request->getContent(), true);
 
@@ -33,13 +32,13 @@ class ReservationController extends AbstractController
 
         // Validate start date
         $startDate = $reservationService->validateDate($data['startDate'] ?? '');
-        if ($startDate === null) {
+        if (null === $startDate) {
             return $this->json(['error' => 'Start date is not valid'], 400);
         }
 
         // Validate end date
         $endDate = $reservationService->validateDate($data['endDate'] ?? '');
-        if ($endDate === null) {
+        if (null === $endDate) {
             return $this->json(['error' => 'End date is not valid'], 400);
         }
 
@@ -48,6 +47,7 @@ class ReservationController extends AbstractController
         if (count($errors) > 0) {
             return $this->json(['errors' => $errors], 400);
         }
+
         return $this->json(['message' => 'Reservation created successfully'], 201);
     }
 
@@ -57,6 +57,7 @@ class ReservationController extends AbstractController
         if ($id !== $this->getUser()->getId()) {
             return $this->json(['error' => 'Unauthorized'], 401);
         }
+
         return $this->json(
             $reservationService->getReservations(
                 $this->getUser(),
@@ -71,24 +72,23 @@ class ReservationController extends AbstractController
 
     #[Route('/reservations/{reservation}', name: 'app_edit_reservation', methods: ['PUT'])]
     public function updateReservation(
-        Reservation        $reservation,
-        Request            $request,
+        Reservation $reservation,
+        Request $request,
         ReservationService $reservationService,
-        CarService         $carService
-    ): Response
-    {
+        CarService $carService
+    ): Response {
         if ($reservation->getUser() !== $this->getUser()) {
             return $this->json(['error' => 'Unauthorized'], 401);
         }
         $data = json_decode($request->getContent(), true);
 
         $startDate = $data['startDate'] ?? false ? $reservationService->validateDate($data['startDate']) : $reservation->getStartDate();
-        if ($startDate === null) {
+        if (null === $startDate) {
             return $this->json(['error' => 'Start date is not valid'], 400);
         }
 
         $endDate = $data['endDate'] ?? false ? $reservationService->validateDate($data['endDate']) : $reservation->getEndDate();
-        if ($endDate === null) {
+        if (null === $endDate) {
             return $this->json(['error' => 'End date is not valid'], 400);
         }
 
@@ -100,7 +100,7 @@ class ReservationController extends AbstractController
             }
         }
 
-        $errors = $reservationService->updateReservation($reservation, $car, $startDate, $endDate, $this->getUser());
+        $errors = $reservationService->updateReservation($reservation, $car, $startDate, $endDate);
         if (count($errors) > 0) {
             return $this->json(['errors' => $errors], 400);
         }
@@ -116,6 +116,7 @@ class ReservationController extends AbstractController
         }
 
         $reservationService->deleteReservation($reservation);
+
         return $this->json(['message' => 'Reservation deleted successfully']);
     }
 }

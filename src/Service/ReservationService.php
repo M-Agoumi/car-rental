@@ -5,9 +5,6 @@ namespace App\Service;
 use App\Entity\Car;
 use App\Entity\Reservation;
 use App\Repository\ReservationRepository;
-use DateTime;
-use DateTimeImmutable;
-use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\User\UserInterface as User;
 
@@ -15,12 +12,11 @@ readonly class ReservationService
 {
     public function __construct(
         private EntityManagerInterface $manager,
-        private ReservationRepository  $reservationRepository
-    )
-    {
+        private ReservationRepository $reservationRepository
+    ) {
     }
 
-    public function reserve(Car $car, DateTimeInterface $startDate, DateTimeInterface $endDate, User $user): array
+    public function reserve(Car $car, \DateTimeInterface $startDate, \DateTimeInterface $endDate, User $user): array
     {
         $reservation = new Reservation();
 
@@ -40,7 +36,7 @@ readonly class ReservationService
         $reservation->setStartDate($startDate);
         $reservation->setEndDate($endDate);
         $reservation->setUser($user);
-        $reservation->setCreatedAt(new DateTimeImmutable());
+        $reservation->setCreatedAt(new \DateTimeImmutable());
 
         $this->manager->persist($reservation);
         $this->manager->flush();
@@ -48,22 +44,23 @@ readonly class ReservationService
         return [];
     }
 
-    public function validateDate(string $date): ?DateTimeInterface
+    public function validateDate(string $date): ?\DateTimeInterface
     {
-        $date = DateTime::createFromFormat('Y-m-d', $date);
-        if ($date === false) {
+        $date = \DateTime::createFromFormat('Y-m-d', $date);
+        if (false === $date) {
             return null;
         }
         $date->setTime(12, 0, 0);
+
         return $date;
     }
 
-    public function getReservations(?User $getUser, $page, $elementByPage): array
+    public function getReservations(?User $getUser, int $page, int $elementByPage): array
     {
         return $this->reservationRepository->findBy(['user' => $getUser], [], $elementByPage, ($page - 1) * $elementByPage);
     }
 
-    public function updateReservation(Reservation $reservation, Car $car, DateTimeInterface $startDate, DateTimeInterface $endDate): array
+    public function updateReservation(Reservation $reservation, Car $car, \DateTimeInterface $startDate, \DateTimeInterface $endDate): array
     {
         // check if the dates are in the past
         $error = $this->areDateInThePast($startDate, $endDate);
@@ -80,7 +77,7 @@ readonly class ReservationService
         $reservation->setCar($car);
         $reservation->setStartDate($startDate);
         $reservation->setEndDate($endDate);
-        $reservation->setUpdatedAt(new DateTimeImmutable());
+        $reservation->setUpdatedAt(new \DateTimeImmutable());
 
         $this->manager->persist($reservation);
         $this->manager->flush();
@@ -88,10 +85,10 @@ readonly class ReservationService
         return [];
     }
 
-    private function areDateInThePast(DateTimeInterface $startDate, DateTimeInterface $endDate): ?array
+    private function areDateInThePast(\DateTimeInterface $startDate, \DateTimeInterface $endDate): ?array
     {
         // check if the start date is in the past
-        if ($startDate < new DateTimeImmutable('today')) {
+        if ($startDate < new \DateTimeImmutable('today')) {
             return ['startDate' => 'Start date cannot be in the past'];
         }
 

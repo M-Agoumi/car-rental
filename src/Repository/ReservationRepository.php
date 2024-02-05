@@ -5,7 +5,6 @@ namespace App\Repository;
 use App\Entity\Car;
 use App\Entity\Reservation;
 use App\Entity\User;
-use DateTimeInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -24,7 +23,7 @@ class ReservationRepository extends ServiceEntityRepository
         parent::__construct($registry, Reservation::class);
     }
 
-    public function findExistingReservation(Car $car, DateTimeInterface $startDate, DateTimeInterface $endDate, $excludeReservation = null)
+    public function findExistingReservation(Car $car, \DateTimeInterface $startDate, \DateTimeInterface $endDate, ?Reservation $excludeReservation = null)
     {
         $qb = $this->createQueryBuilder('r')
             ->andWhere('r.car = :car')
@@ -44,11 +43,16 @@ class ReservationRepository extends ServiceEntityRepository
     }
 
     /**
-     * find the first reservation that is not owned by the authenticate user
+     *  find the first reservation that is not owned by the authenticate user.
+     *
+     * @return float|int|mixed|string|null
+     *
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function findFirstNotOwned(User $user)
+    public function findFirstNotOwned(User $user): mixed
     {
         $db = $this->createQueryBuilder('r');
+
         return $db->where($db->expr()->neq('r.user', ':user'))
             ->setParameter('user', $user)
             ->orderBy('r.id', 'ASC')
